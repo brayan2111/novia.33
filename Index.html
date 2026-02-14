@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galaxia San Valentín</title>
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    font-family:'Comic Sans MS', cursive;
+}
+
+/* Canvas de fondo */
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
+
+/* Título central */
+.title{
+    position:absolute;
+    top:5%;
+    width:100%;
+    text-align:center;
+    font-size:6vw; /* responsive */
+    color:#ff77cc;
+    text-shadow:0 0 20px #ff00ff,0 0 40px #ff00ff;
+    z-index:10;
+}
+
+/* GALAXIA CENTRAL */
+.galaxy{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:50vw;
+    max-width:600px;
+    height:50vw;
+    max-height:600px;
+    transform:translate(-50%,-50%);
+    z-index:2;
+}
+.system{ position:absolute; width:100%; height:100%; transform-style:preserve-3d; }
+.ring{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:80%;
+    height:80%;
+    border-radius:50%;
+    box-shadow: 0 0 40px 20px #ff00ff, 0 0 120px 40px #ff00ff;
+    transform:translate(-50%,-50%) rotateX(65deg);
+    z-index:5;
+}
+.planet{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:35%;
+    height:35%;
+    transform:translate(-50%,-50%);
+    background:black;
+    border-radius:50%;
+    box-shadow:0 0 100px 40px rgba(255,0,255,0.6);
+    z-index:5;
+}
+.word{
+    position:absolute;
+    top:50%;
+    left:50%;
+    color:white;
+    font-size:3vw;
+    text-shadow:0 0 10px #ff00ff;
+    white-space:nowrap;
+    z-index:6;
+}
+
+/* CARTA ROMÁNTICA TRANSPARENTE */
+.left-card{
+    position:absolute;
+    width:40vw;
+    max-width:300px;
+    height:auto;
+    top:50%;
+    left:10%;
+    transform:translateY(-50%);
+    background:rgba(255,182,193,0.4);
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(255,0,200,0.3);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+    z-index:3;
+}
+.left-card p{
+    font-size:4vw;
+    line-height:1.4;
+    color:#4d062d;
+}
+
+/* MARIPOSAS EN CARTA */
+.left-card::before, .left-card::after{
+    content:"🦋";
+    font-size:5vw;
+    position:absolute;
+    top:5px;
+}
+.left-card::before{ left:5px; transform: rotate(-20deg);}
+.left-card::after{ right:5px; transform: rotate(20deg);}
+
+/* VIDEO + FOTOS DERECHA */
+.right-media{
+    position:absolute;
+    top:50%;
+    right:5%;
+    transform:translateY(-50%);
+    width:45vw;
+    max-width:350px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:10px;
+    background:rgba(255,182,193,0.3);
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(255,0,200,0.3);
+    box-sizing:border-box;
+    z-index:6;
+}
+.right-media::before, .right-media::after{
+    content:"🦋";
+    font-size:4vw;
+    position:absolute;
+    top:5px;
+}
+.right-media::before{ left:5px; transform: rotate(-20deg);}
+.right-media::after{ right:5px; transform: rotate(20deg);}
+.right-media video{
+    width:100%;
+    border-radius:10px;
+}
+
+/* Fotos en fila responsive */
+.photos{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+}
+.photos img{
+    width:30%;
+    min-width:60px;
+    border-radius:8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.photos img:hover{
+    transform: scale(1.05);
+    box-shadow:0 0 20px #ff77cc;
+}
+
+@media(max-width:600px){
+    .left-card p{ font-size:5vw; }
+    .word{ font-size:4vw; }
+}
+</style>
+</head>
+<body>
+<canvas id="space"></canvas>
+
+<div class="title">Feliz San Valentín ❤️</div>
+
+<!-- GALAXIA -->
+<div class="galaxy">
+    <div class="system">
+        <div class="ring" id="ring"></div>
+        <div class="word">Te amo 💖</div>
+        <div class="word">Mi princesa</div>
+        <div class="word">Eres mi hogar</div>
+        <div class="word">Mi universo</div>
+        <div class="word">Siempre tú</div>
+        <div class="word">Mi vida entera</div>
+        <div class="word">Contigo siempre</div>
+        <div class="word">Mi corazón es tuyo</div>
+        <div class="word">Eres mi destino</div>
+        <div class="word">Mi estrella ✨</div>
+    </div>
+    <div class="planet"></div>
+</div>
+
+<!-- AUDIO -->
+<audio id="musica" src="musica.mp3" loop></audio>
+
+<!-- CARTA -->
+<div class="left-card">
+    <p>Para mí, tú eres mi mundo entero.<br>
+    Hoy 14 de febrero agradezco tenerte conmigo.<br>
+    Cada momento contigo es un tesoro, y siempre deseo que nuestra historia continúe brillando como las estrellas. 💖</p>
+</div>
+
+<!-- VIDEO + FOTOS -->
+<div class="right-media">
+    <video id="video" src="video.mp4" muted playsinline></video>
+    <div class="photos">
+        <img src="foto1.jpeg" alt="Foto 1">
+        <img src="foto2.jpeg" alt="Foto 2">
+        <img src="foto3.jpeg" alt="Foto 3">
+    </div>
+</div>
+
+<script>
+// --- Canvas de estrellas ---
+const canvas = document.getElementById("space");
+const ctx = canvas.getContext("2d");
+function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let stars = [];
+for(let i=0;i<600;i++){
+    stars.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, size:Math.random()*2, alpha:Math.random() });
+}
+let meteors = [];
+function createMeteor(){ meteors.push({ x:Math.random()*canvas.width, y:-20, length:Math.random()*80+50, speed:Math.random()*6+4, radius:2 }); }
+function drawSpace(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(star=>{
+        ctx.fillStyle="rgba(255,255,255,"+star.alpha+")";
+        ctx.beginPath();
+        ctx.arc(star.x,star.y,star.size,0,Math.PI*2);
+        ctx.fill();
+    });
+    meteors.forEach((m,i)=>{
+        let gradient = ctx.createLinearGradient(m.x,m.y,m.x - m.length,m.y - m.length);
+        gradient.addColorStop(0,"rgba(180,180,180,0.9)");
+        gradient.addColorStop(0.4,"rgba(140,140,140,0.6)");
+        gradient.addColorStop(0.7,"rgba(100,100,100,0.3)");
+        gradient.addColorStop(1,"rgba(80,80,80,0)");
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = m.radius * 2;
+        ctx.beginPath();
+        ctx.moveTo(m.x,m.y);
+        ctx.lineTo(m.x - m.length, m.y - m.length);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(m.x,m.y,m.radius+3,0,Math.PI*2);
+        ctx.fillStyle="rgba(255,140,0,0.4)";
+        ctx.shadowColor="orange";
+        ctx.shadowBlur=25;
+        ctx.fill();
+        ctx.shadowBlur=0;
+        ctx.beginPath();
+        ctx.arc(m.x,m.y,m.radius,0,Math.PI*2);
+        ctx.fillStyle="black";
+        ctx.fill();
+        m.y += m.speed; m.x += m.speed;
+        if(m.y>canvas.height||m.x>canvas.width) meteors.splice(i,1);
+    });
+    requestAnimationFrame(drawSpace);
+}
+setInterval(createMeteor,700);
+drawSpace();
+
+// --- Orbita palabras ---
+const words = document.querySelectorAll(".word");
+const ring = document.getElementById("ring");
+const radius = 270;
+let baseAngle = 0;
+function animateWords(){
+    baseAngle += 0.01;
+    ring.style.transform = `translate(-50%,-50%) rotateX(65deg) rotateZ(${baseAngle}rad)`;
+    const total = words.length;
+    words.forEach((word,i)=>{
+        const angle = baseAngle + (i*(Math.PI*2/total));
+        const x = Math.cos(angle)*radius;
+        const y = Math.sin(angle)*radius*0.5;
+        word.style.transform = `translate(-50%,-50%) translate(${x}px,${y}px)`;
+    });
+    requestAnimationFrame(animateWords);
+}
+animateWords();
+
+// --- Video loop 10s ---
+const video = document.getElementById('video');
+video.addEventListener('loadedmetadata', ()=>{
+    video.play().catch(()=>{});
+    setInterval(()=>{ video.currentTime=0; video.play().catch(()=>{}); }, 10000);
+});
+
+// --- Música autoplay móvil ---
+const musica = document.getElementById('musica');
+// iOS y algunos Android requieren un evento user gesture
+document.body.addEventListener('click', ()=>{ musica.play().catch(()=>{}); }, {once:true});
+</script>
+</body>
+</html>
